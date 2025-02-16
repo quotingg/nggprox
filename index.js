@@ -9,7 +9,10 @@ const prox = createProxyMiddleware({
     secure: true,
     logLevel: "debug",
     router: function (req) {
-        console.log(req.headers)
+        delete req.headers["x-real-ip"];
+        delete req.headers["x-forwarded-for"];
+        delete req.headers["x-forwarded-proto"];
+        req.headers["user-agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15";
         return targ;
     }
 })
