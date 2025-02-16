@@ -2,7 +2,7 @@ const exp = require("express");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const app = exp();
 
-const targ = "https://tiktok.com"
+const targ = "https://neal.fun"
 const prox = createProxyMiddleware({
     target: targ,
     changeOrigin: true,
