@@ -6,7 +6,6 @@ const targ = "https://doctoraux.com"
 const prox = createProxyMiddleware({
     target: targ,
     changeOrigin: true,
-    secure: true,
     router: function (req) {
             req.headers['X-Forwarded-For'] = '';
             req.headers['X-Real-IP'] = '';
