@@ -9,11 +9,7 @@ const prox = createProxyMiddleware({
     secure: true,
     logLevel: "debug",
     router: function (req) {
-        if (req.headers.host !== new URL(targ).host) {
-            req.headers['X-Forwarded-For'] = '';
-            req.headers['X-Real-IP'] = '';
-            req.headers['Via'] = '';
-        }
+        console.log(req.headers)
         return targ;
     }
 })
