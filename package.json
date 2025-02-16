@@ -3,9 +3,11 @@
     "description": "now.gg proxy stuff",
     "dependencies": {
         "axios": "^1.7.9",
-        "express": "^4.21.2"
+        "express": "^4.21.2",
+        "express-http-proxy": "^2.1.1",
         "http-proxy": "^1.18.1",
         "http-proxy-middleware": "^3.0.3",
+        "node-fetch": "^3.3.2"
     },
     "scripts": {
         "start": "node index.js"
