@@ -6,14 +6,15 @@ const targ = "https://doctoraux.com"
 const prox = createProxyMiddleware({
     target: targ,
     changeOrigin: true,
+    secure: true,
+    logLevel: "debug",
     router: function (req) {
-        req.headers.host = "doctoraux.com";
-        req.headers.origin = "https://doctoraux.com";
+        if (req.headers.host !== new URL(targ).host) {
+            req.headers['X-Forwarded-For'] = '';
+            req.headers['X-Real-IP'] = '';
+            req.headers['Via'] = '';
+        }
         return targ;
-    },
-    onProxyRes: function(pres, req, res) {
-        pres.headers.host = "doctoraux.com";
-        pres.headers.origin = "https://doctoraux.com";    
     }
 })
 
