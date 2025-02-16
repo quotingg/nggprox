@@ -9,7 +9,7 @@ const prox = createProxyMiddleware({
     secure: true,
     logLevel: "debug",
     router: function (req) {
-        if (req.headers.host === 'now.gg') {
+        if (req.headers.host === 'doctoraux.com') {
             req.headers['X-Forwarded-For'] = '';
             req.headers['X-Real-IP'] = '';
             req.headers['Via'] = '';
