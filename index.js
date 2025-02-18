@@ -1,5 +1,5 @@
 const exp = require("express");
-const proxy = require("http-proxy");
+const proxy = require("express-http-proxy");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const app = exp();
 
