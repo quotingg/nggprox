@@ -32,7 +32,7 @@ const targ = "https://mathsspot.com"
 })*/
 
 app.get("/", (_Request, Response) => {
-    Response.sendFile(path.join(__dirname, "apps/froggie.html"));//, "now.html"));
+    Response.sendFile(path.join(__dirname, "apps/uncube/10005", "now.html"));
 })
 app.use("/", prox('https://educationbluesky.com'));
 app.listen(5000, () => {
