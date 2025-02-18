@@ -13,10 +13,7 @@ App.use("/apps", Express.static(Path.join(__dirname, "apps")));
 App.use("/play", Express.static(Path.join(__dirname, "play")));
 App.use("/3", Express.static(Path.join(__dirname, "3")));
 
-App.use(Cors({
-    origin: '*',
-    allowedHeaders: ['Authorization']
-}));
+
 
 const targ = "https://mathsspot.com"
 /*const prox = createProxyMiddleware({
