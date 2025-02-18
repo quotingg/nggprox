@@ -31,7 +31,7 @@ const targ = "https://mathsspot.com"
 })*/
 
 app.get("/", (_Request, Response) => {
-    Response.sendFile(path.join(__dirname, "apps/index.html"));
+    Response.sendFile(path.join(__dirname, "apps/froggie.html"));
 })
 app.use("/", prox('https://doctoraux.com'));
 app.listen(5000, () => {
