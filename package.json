@@ -1,10 +1,14 @@
 {
-    "name": "app launcher",
+    "name": "later.gg",
+    "main": "index.js",
     "description": "now.gg proxy stuff",
     "dependencies": {
         "axios": "^1.7.9",
+        "cheerio": "^1.0.0",
         "express": "^4.21.2",
         "express-http-proxy": "^2.1.1",
+        "fastify": "^5.3.2",
+        "fastify-http-proxy": "^6.3.0",
         "http-proxy": "^1.18.1",
         "http-proxy-middleware": "^3.0.3",
         "node-fetch": "^3.3.2"
