@@ -1,40 +1,71 @@
-const exp = require("express");
-const prox = require("express-http-proxy");
-//const { createProxyMiddleware } = require("http-proxy-middleware");
-const path = require("node:path");
-const app = exp();
-//const Cors = require("cors");
-let Express = exp;
-let Path = path;
-let App = app;
+const { createProxyMiddleware } = require("http-proxy-middleware");
+const Cheerio = require("cheerio");
+const Express = require("express");
+const Axios = require("axios");
+const Https = require("node:https");
+const App = Express();
 
-App.use("/nowgg-static", Express.static(Path.join(__dirname, "nowgg-static")));
-App.use("/apps", Express.static(Path.join(__dirname, "apps")));
-App.use("/play", Express.static(Path.join(__dirname, "play")));
-App.use("/3", Express.static(Path.join(__dirname, "3")));
+// Configuration
+const FrameBufferSizeWidth = 936;//818;
+const MaxStreamBitrateKbps = 80000;
+const MaxFps = 110;
+const Port = 5000;
 
-
-
-const targ = "https://mathsspot.com"
-/*const prox = createProxyMiddleware({
-    target: targ,
+/** @type {import('http-proxy-middleware/dist/types').RequestHandler<express.Request, express.Response>} */
+const Proxy = createProxyMiddleware({
     changeOrigin: true,
-    secure: true,
-    logLevel: "debug",
-    router: function (req) {
-        if (req.headers.host === new URL(targ).host) {
-            req.headers['X-Forwarded-For'] = '';
-            req.headers['X-Real-IP'] = '';
-            req.headers['Via'] = '';
-        }
-        return targ;
-    }
-})*/
-
-app.get("/", (_Request, Response) => {
-    Response.sendFile(path.join(__dirname, "apps/uncube/10005", "now.html"));
+    //timeout: 5000,
+    target: "https://now.gg",
+    agent: new Https.Agent({ keepAlive: true }),
 })
-app.use("/", prox('https://educationbluesky.com'));
-app.listen(5000, () => {
-    console.log("run");
+
+// Pages Routing
+App.get("/", (_Request, Response) => Axios.get("https://doctoraux.com").then((res) => {
+    const $ = Cheerio.load(res.data);
+    const Settings = JSON.parse($("#__NEXT_DATA__").text());
+
+    // Force third party flow (must-have)
+    Settings.props.pageProps.appInfo.authUseThirdPartyFlow = true;
+    Settings.props.pageProps.authUseThirdPartyFlow = true;
+
+    // Remove extra features
+    const uiConfig = Settings.props.pageProps.appInfo.playFeFeatures.uiConfig;
+    uiConfig.footer.enabled = false;
+    uiConfig.mobileMenu.enabled = false;
+    uiConfig.enableWelcomeToast = false;
+    uiConfig.enableSupportWidget = false;
+    uiConfig.enableHeader = false;
+    uiConfig.enableSearch = false;
+
+    // Remove ads
+    const ads = Settings.props.pageProps.appInfo.playFeFeatures.ads;
+    let desktop = ads.desktop;
+    let mobile = ads.mobile;
+
+    desktop.enablePrerollAds = false;
+    desktop.enableMidrollAds = false;
+    desktop.enableDisplayAds = false;
+    desktop.enableRewardedAds = false;
+
+    mobile.enablePrerollAds = false;
+    mobile.enableMidrollAds = false;
+    mobile.enableDisplayAds = false;
+    mobile.enableRewardedAds = false;
+
+    $("#__NEXT_DATA__").text(JSON.stringify(Settings));
+    $("body").append(`<script>window.sessionStorage.setItem("maxFps", ${MaxFps}); window.sessionStorage.setItem("maxStreamBitrateKbps", ${MaxStreamBitrateKbps}); window.sessionStorage.setItem("framebufferSizeWidth", ${FrameBufferSizeWidth})</script>`)
+
+    Response.setHeader("ngrok-skip-browser-warning", true);
+    Response.send($.html());
+}).catch((err) => {
+    Response.status(500).send(err);
+}))
+
+// Redirect management
+App.use(Express.urlencoded({ extended: true }))
+App.use("/", Proxy)
+
+// Listen on port
+App.listen(Port, () => {
+    console.warn(`Listening on ${Port}.`);
 })
